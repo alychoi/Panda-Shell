@@ -162,7 +162,7 @@ int main () {
                 free(args1);
             }
         }
-        // ls -l;echo hello;echo bye
+        // ls -l;echo hello;echo bye;echo hi
         // start(args);
         free(line);
         // free(args);
