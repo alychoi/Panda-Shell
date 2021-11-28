@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # project01
 # A description of what features your shell implements
 # A description of what features you attempted to implement but were unsuccessful
@@ -7,20 +8,23 @@
 # A copy of every function header
 # An example of the readme file can be found in the github repository for this assignment
 =======
+=======
+## MASH
+>>>>>>> 51548aedd9862750405c30706abc2a40b38b8462
 (**M**acy and **A**lyssa's **SH**ell) <br>
 This project is an implementation of a shell in C.
 
-## 
-* Clone the Repository
-```
+Shell Features
 
-```
-* Change Directories 
-```
+Bugs
 
+<<<<<<< HEAD
 ```
 * Compile using make
 ```
 make
 ```
 >>>>>>> 84284ea852e45cae1da07a1c46af4363cb48fe4b
+=======
+All Function Headers
+>>>>>>> 51548aedd9862750405c30706abc2a40b38b8462
