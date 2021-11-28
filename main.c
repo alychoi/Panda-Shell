@@ -8,10 +8,7 @@
 #define buffer_len 10
 #define buffer_len_2 64
 
-// Read a line at a time, parse the line to separate the command from its arguments. 
-// It should then fork and exec the command. 
-// The parent process should wait until the exec’d program exits and then it should read the next command.
-
+// TODO
 // implement exit and cd on our own (use chdir())
 
 // Read and separate multiple commands on one line with ;
@@ -28,15 +25,15 @@ char * read_line() {
     int c;
     int pos = 0;
     while (1) {
-        c = getchar();
-        if (c == '\n') {
+        c = getchar(); // read a character
+        if (c == '\n') { // replace end of line with null
             buffer[pos] = '\0';
             return buffer;
         } else {
             buffer[pos] = c;
         }
         pos++;
-        if (pos >= bl) {
+        if (pos >= bl) { // reallocate if buffer is insufficient
             bl += buffer_len;
             buffer = realloc(buffer, bl);
             if (!buffer) {
@@ -52,11 +49,11 @@ char ** parse_line(char *line, char *delim) {
     int pos = 0;
     char ** tokens = malloc(bl * sizeof(char *));
     char *token;
-    token = strtok(line, delim);
+    token = strtok(line, delim); // breaks the line into a series of tokens using the delim
     while (token != NULL) {
         tokens[pos] = token;
         pos++;
-        if (pos >= bl) {
+        if (pos >= bl) { // reallocate if buffer for pointers is insufficient
             bl += buffer_len_2;
             tokens = realloc(tokens, bl * sizeof(char *));
             if (!tokens) {
@@ -74,13 +71,13 @@ int start(char ** args) {
     int pid2;
     int status;
     if (pid == 0) {
-        if (execvp(args[0], args) == -1) {
+        if (execvp(args[0], args) == -1) { // child
             printf("%s\n", strerror(errno));
         }
         exit(0);
     } else if (pid < 0) {
         printf("%s\n", strerror(errno));
-    } else {
+    } else { // parent
         while (!WIFEXITED(status) && !WIFSIGNALED(status)) {
             pid2 = waitpid(pid, &status, WUNTRACED);
         }
@@ -88,12 +85,45 @@ int start(char ** args) {
     return WEXITSTATUS(status);
 }
 
-int main () {   
-    while (1) {
-        printf("Start shell\n");
+int is_command(char **args) {
+    char *cmd = args[0];
+
+    if (strcmp(cmd, "exit") == 0) {
+        return 1;
+    }
+    else if (strcmp(cmd, "cd") == 0) {
+        return 1;
+    }
+    else return 0;
+}
+
+int exec_command(char **args) {
+    if (strcmp(args[0], "exit") == 0) {
+        exit(0);
+    } else if (strcmp(args[0], "cd") == 0) {
+        chdir(args[1]);
+        }
+    return 1;
+}
+
+int main(int argc, char **argv) {   
+    while(1) {
+        printf("MASH ~$ ");
+
+        // read in line
         char *line = read_line();
+
+        // parse commands from input
         char ** args = parse_line(line, " ");
-        start(args);
+
+        // execute commands
+        if (is_command(args)) {
+            exec_command(args);
+        } else {
+            start(args);
+        }
+
+        
         free(line);
         free(args);
     }
