@@ -80,28 +80,44 @@ void redirection(char ** args) {
             if (in < 0) {
                 printf("%s\n", strerror(errno));
             }
-            //int backup_stdin = dup( STDIN_FILENO ); 
             dup2(in, STDIN_FILENO); 
+            //strcpy(args[i-1], args[i+1]);
             args[i] = NULL;
-            //dup2(backup_stdin, STDIN_FILENO); 
+            //printf("char: %s\t%s\t%s\n", args[0], args[1], args[2]);
+            //strcpy(args[i-1], args[i+1]);
+            printf("char: %s\t%s\t%s\n", args[0], args[1], args[2]);
         }
         if (strcmp(args[i], ">") == 0) {
             int out = open(args[i+1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
             if (out < 0) {
                 printf("%s\n", strerror(errno));
             }
-            //int backup_stdout = dup( STDOUT_FILENO ); 
             dup2(out, STDOUT_FILENO); 
             args[i] = NULL;
-            //dup2(backup_stdout, STDOUT_FILENO); 
         }
         i++;
     }
 }
 
+// void piping(char ** args) { 
+//     int i = 0;
+//     while (args[i] != NULL) {
+//         if 
+//         FILE *f = popen(args[i], "c");
+//         int duplicate = dup(STDIN_FILENO); // redirect stdout to stdin of second
+//         dup2(fileno(f), STDOUT_FILENO);
+//         //char *args[i+1] = args[i+1];
+//         // execvp(args[i+1], args);
+//         // dup2(duplicate, STDIN_FILENO);
+//         // }
+//         i++;
+//     }
+// }
+
 int start(char ** args) {
     // exit
     if (strcmp(args[0], "exit") == 0) {
+        printf("exiting...\n");
         exit(0);
     }
     // cd
@@ -119,18 +135,18 @@ int start(char ** args) {
         int backup_sdout = dup(STDOUT_FILENO);
         int backup_sdin = dup(STDIN_FILENO);
         redirection(args);
-        dup2(backup_sdout, STDOUT_FILENO);
-        dup2(backup_sdin, STDIN_FILENO);
+        //piping(args);
+        //printf("char: %s\t%s\t%s\n", args[0], args[1], args[2]);
         if (execvp(args[0], args) == -1) {
             printf("%s\n", strerror(errno));
         }
+        dup2(backup_sdout, STDOUT_FILENO);
+        dup2(backup_sdin, STDIN_FILENO);
         exit(0);
     } else if (pid < 0) { // error forking
         printf("%s\n", strerror(errno));
     } else { // parent
-        while (!WIFEXITED(status) && !WIFSIGNALED(status)) {
-            pid2 = waitpid(pid, &status, WUNTRACED);
-        }
+        wait(&status);
     }
     return WEXITSTATUS(status);
 }
@@ -142,30 +158,22 @@ int main () {
         char ** args = parse_line(line, ";");
         int i;
         char ** args1;
-        printf("%d\n",pos);
+        char ** args2;
+        //printf("%d\n",pos);
         int p = pos;
+        int p2;
         for (i = 0; i < p; i++) {
-            //printf("\"%s\"\n", args[i]);
+            //args2 = parse_line(args[i], "|");
             args1 = parse_line(args[i], " ");
-            int p2 = pos;
-            printf("0\n");
-            printf("p2: %d\n", p2);
-            printf("pos: %d\n", pos);
-            //printf("%s\n", args1[0]);
-            if (p2 == 1) {
-                start(args);
-                free(args);
-            } else {
-                printf("1\n");
-                start(args1);
-                printf("2\n");
-                free(args1);
-            }
+            start(args1);
+            //start(args2);
+            free(args1);
+            //free(args2);
         }
         // ls -l;echo hello;echo bye;echo hi
         // start(args);
         free(line);
-        // free(args);
+        free(args);
     }
     return 0;
 }
