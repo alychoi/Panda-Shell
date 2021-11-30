@@ -23,7 +23,6 @@ int main () {
         int i;
         char ** args1;
         char ** args2;
-        //printf("%d\n",pos);
         int p = pos;
         int p2;
         for (i = 0; i < p; i++) {
