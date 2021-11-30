@@ -1,19 +1,32 @@
-## MASH
-(**M**acy and **A**lyssa's **SH**ell)<br>
+## PANDALAND
+Alyssa Choi & Macy Jiang (Period 4)<br>
 This project is an implementation of a shell in C.
 
-Shell Features
+## Shell Features
+* read line from stdin
+* parse line into list of strings with a delimeter of the user's choosing
+* redirection (>, >>, <)
+* piping
+* start processes 
+* read and separate multiple commands with ;
 
-Bugs
-* Redirection does not work properly (creates file but nothing in file)
-* In multiple commands (“;”), order is switched
+## Restrictions
+* multiple commands should be separated with ";" (no adjacent spaces)
+* redirection should be used with one space on adjacent sides of the symbol (i.e. " < ")
+* piping should be used with one space on adjacent sides of the symbol (i.e. " | ")
 
-All Function Headers
+## Function Headers
+// reads line from stdin 
+char * read_line();
 
-* project01
-* A description of what features your shell implements
-* A description of what features you attempted to implement but were unsuccessful
-* Any bugs or things you want me to know about your program
-* I am much more forgiving of reported bugs than bugs I discover while testing
-* A copy of every function header
-* An example of the readme file can be found in the github repository for this assignment
+// parses line into list of strings with a delimeter of the user's choosing
+char ** parse_line(char *line, char *delim);
+
+// redirects stdout to a file, stdout to a file by appending, and stdin from a file
+void redirect(char ** args);
+
+// parses line by "|" and redirects stdout from one program to stdin of the next
+void piping(char ** args, char * line);
+
+// starts program; includes cd, exit, fork & exec commands
+int start(char ** args, char * line);
