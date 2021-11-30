@@ -1,0 +1,7 @@
+dog
+horse
+cathorse
+horse
+cow
+dog
+cowTue Nov 30 02:08:44 EST 2021
