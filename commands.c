@@ -92,7 +92,6 @@ void piping(char ** args, char * line) {
     char ** args1 = parse_line(line, "|");
     FILE *read = popen(args1[0], "r");
     FILE *write = popen(args1[1], "w");
-    //int fd = fileno(read);
     if (read < 0) {
         printf("%s\n", strerror(errno));
     }
@@ -100,7 +99,6 @@ void piping(char ** args, char * line) {
     while (fgets(buffer, 1000, read)) {
         fputs(buffer, write);
     }
-    //dup2(fd, STDIN_FILENO);
     pclose(read);
     pclose(write);
 }
