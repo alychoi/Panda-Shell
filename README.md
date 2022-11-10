@@ -1,5 +1,5 @@
 ## PANDALAND
-Alyssa Choi & Macy Jiang (Period 4)<br>
+Alyssa Choi (Period 4)<br>
 This project is an implementation of a shell in C.
 
 ## Shell Features
